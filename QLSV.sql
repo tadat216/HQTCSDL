@@ -1,4 +1,4 @@
-use QLSV
+﻿use QLSV
 
 -- tao bang
 
@@ -166,6 +166,56 @@ BEGIN
 	alter table KETQUA check constraint all 
 END
 
---Bai tap
+-- Bai tap
 
-select * from SINHVIEN
+-- 1. Cho biết tên, địa chỉ, điện thoại của sinh viên.
+select SV.Ten, SV.DiaChi, SV.DienThoai from SINHVIEN SV	
+
+-- 2. Cho biết tên các môn học và số tín chỉ của từng môn học.
+select MH.TenMH, MH.SoTC from MONHOC MH
+
+-- 3. Cho biết kết quả học tập của SV có mã số SV3
+select MH.TenMH, KQ.diem from KETQUA KQ, GIANGDAY GD, MONHOC MH
+where GD.MaKhoaHoc = KQ.MaKhoaHoc and GD.MaMH = MH.MaMH and KQ.MaSV = 'SV003'
+
+-- 4. Cho biết tên các môn học và soos tín chỉ của những môn học có trấu trúc của mã môn học như sau:
+-- ký tự thứ 1 là "C", ký tự thứ 3 là "D".
+select MH.TenMH, MH.SoTC from MONHOC MH
+where substring(MH.MaMH, 1, 1) = 'C' and substring(MH.MaMH, 3, 1) = 'D'
+
+-- 5. Cho biết tên giáo viên có ký tự thứ 3 là "A".
+select GV.TenGV from GIAOVIEN GV
+where substring(GV.TenGV, 3, 1) = 'A'
+
+--6. Cho biết tên những môn học chứa chữ "DU".
+select MH.TenMH from MONHOC MH
+where MH.TenMH like '%DU%'
+
+--7. Cho biết tên các giáo viên có ký tự đầu tiên của họ và tên là 'P' và 'L'.
+select GV.TenGV from GIAOVIEN GV
+where substring(GV.TenGV, 1, 1) = 'P' or substring(GV.TenGV, 1, 1) = 'L'
+
+--8. Cho biết tên, địa chỉ của từng sinh viên có địa chỉ trên đường "Cống Quỳnh".
+select SV.Ten, SV.DiaChi from SINHVIEN SV
+where SV.DiaChi like '%CONG QUYNH%'
+
+--9. Cho biết danh sách các môn học được dạy trong năm 2021.
+select MH.MaMH, MH.TenMH from MONHOC MH, GIANGDAY GD
+where MH.MaMH = GD.MaMH and GD.nam = 2021
+
+--10. Cho biết mã, tên, địa chỉ của các sinh viên theo từng Khoa sắp xếp
+--theo thứ tự từ A-Z của tên sinh viên
+select SV.MSSV, SV.Ten, SV.DiaChi from SINHVIEN SV
+order by SV.Ten
+
+--11. Cho biết điểm của các sinh  viên theo từng môn học
+
+--12. Cho biết các SV học CSDL có kết quả từ 8 đến 10
+select SV.MSSV, SV.Ten, KQ.Diem from SINHVIEN SV, KETQUA KQ, GIANGDAY GD
+where SV.MSSV = KQ.MaSV and KQ.MaKhoaHoc = GD.MaKhoaHoc and GD.MaMH = 'CSDL' and KQ.Diem >= 8 and KQ.Diem <= 10
+
+--13. Cho biết bảng điểm của SV tên 'TUNG'
+select SV.Ten, MH.TenMH, KQ.Diem from SINHVIEN SV, KETQUA KQ, GIANGDAY GD, MONHOC MH
+where SV.MSSV = KQ.MaSV and KQ.MaKhoaHoc = GD.MaKhoaHoc and GD.MaMH = MH.MaMH and SV.ten like '%TUNG%'
+
+--14. 
