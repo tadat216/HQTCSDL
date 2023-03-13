@@ -218,4 +218,64 @@ where SV.MSSV = KQ.MaSV and KQ.MaKhoaHoc = GD.MaKhoaHoc and GD.MaMH = 'CSDL' and
 select SV.Ten, MH.TenMH, KQ.Diem from SINHVIEN SV, KETQUA KQ, GIANGDAY GD, MONHOC MH
 where SV.MSSV = KQ.MaSV and KQ.MaKhoaHoc = GD.MaKhoaHoc and GD.MaMH = MH.MaMH and SV.ten like '%TUNG%'
 
---14. 
+--14. Cho biết tên khoa, tên môn học mà những sinh viên trong khoa đã học
+select KHOA.TenKhoa, MH.TenMH from SINHVIEN SV, KETQUA KQ, GIANGDAY GD, MONHOC MH, KHOA
+where SV.MSSV = KQ.MaSV and GD.MaKhoaHoc = KQ.MaKhoaHoc and MH.MaMH = GD.MaMH and KHOA.MaKhoa = SV.MaKhoa
+group by KHOA.TenKhoa, MH.TenMH
+
+
+--15. Cho biết tên khoa, mã khóa học mà giáo viên của khoa có tham gia giảng dạy
+select KHOA.TenKhoa, GD.MaKhoaHoc from KHOA, GIAOVIEN GV, GIANGDAY GD
+where KHOA.MaKhoa = GV.MaKhoa and GD.MaGV = GV.MaGV
+
+--16. Cho biết các sinh viên đã học môn 'CSDL' hoặc 'CTDL'
+select SV.Ten from SINHVIEN SV, KETQUA KQ, GIANGDAY GD
+where SV.MSSV = KQ.MaSV and GD.MaKhoaHoc = KQ.MaKhoaHoc and (GD.MaMH = 'CSDL' or GD.MaMH = 'CTDL')
+group by SV.Ten
+
+--17. Cho biết tên các giáo viên tham gia giảng dạy môn "Ky thuat lap trinh"
+select GV.TenGV from GIANGDAY GD, GIAOVIEN GV
+where GD.MaMH = 'KTLT' and GV.MaGV = GD.MaGV
+group by GV.MaGV, GV.TenGV
+
+--18. Cho biết tên môn học mà GV tên "Tran Van Tien" tham gia giảng dạy trong HK1, 2020
+select MH.TenMH from GIAOVIEN GV, GIANGDAY GD, MONHOC MH
+where GV.MaGV = GD.MaGV and GV.TenGV = 'TRAN VAN TIEN' and MH.MaMH = GD.MaMH and GD.HocKy = 1 and GD.Nam = 2020
+
+--19. Cho biết mã, tên các sinh viên có kết quả 1 môn học nào đó > 8
+select SV.MSSV, SV.Ten from SINHVIEN SV, KETQUA KQ
+where SV.MSSV = KQ.MaSV and KQ.Diem > 8
+group by SV.MSSV, SV.Ten
+
+--20. Cho biết sinh viên có tất cả các môn trên 8
+select SV.MSSV, SV.Ten from SINHVIEN SV
+where SV.MSSV not in(
+	select SV.MSSV from SINHVIEN SV, KETQUA KQ
+	where SV.MSSV = KQ.MaSV and KQ.Diem < 8
+)
+
+--21. Có bao nhiêu sinh viên
+select count(*) from SINHVIEN
+
+--22. Có bao nhiêu giáo viên
+select count(*) from GIAOVIEN
+
+--23. Có bao nhiêu sinh viên có phái nữ và thuộc khoa CNTT
+select count(*)  from SINHVIEN SV
+where SV.GioiTinh='Nu' and SV.MaKhoa='CNTT'
+
+--24. Có bao nhiêu giáo viên khoa CNTT
+select count(*) from GIAOVIEN GV
+where GV.MaKhoa='CNTT'
+
+--25. Có bao nhiêu sinh viên học môn CSDL
+select count(*) from SINHVIEN SV, KETQUA KQ, GIANGDAY GD
+where SV.MSSV = KQ.MaSV and KQ.MaKhoaHoc = GD.MaKhoaHoc and GD.MaMH = 'CSDL'
+
+--26. Có bao nhiêu môn học được dạy trong HK1 2021.
+select count(MH.MaMH) from  MONHOC MH
+left join GIANGDAY GD on MH.MaMH = GD.MaMH 
+where GD.HocKy = 1 and GD.Nam = 2021
+group by MH.MaMH
+
+select * from GIAOVIEN
