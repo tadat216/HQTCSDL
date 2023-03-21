@@ -273,9 +273,8 @@ select count(*) from SINHVIEN SV, KETQUA KQ, GIANGDAY GD
 where SV.MSSV = KQ.MaSV and KQ.MaKhoaHoc = GD.MaKhoaHoc and GD.MaMH = 'CSDL'
 
 --26. Có bao nhiêu môn học được dạy trong HK1 2021.
-select count(MH.MaMH) from  MONHOC MH
-left join GIANGDAY GD on MH.MaMH = GD.MaMH 
+select * from  MONHOC MH
+inner join GIANGDAY GD on MH.MaMH = GD.MaMH 
 where GD.HocKy = 1 and GD.Nam = 2021
-group by MH.MaMH
 
 select * from GIAOVIEN
